@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:S37-multi-tenant-router-basic="http://www.mulesoft.org/schema/mule/S37-multi-tenant-router-basic" xmlns:json-logger="http://www.mulesoft.org/schema/mule/json-logger"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd
+http://www.mulesoft.org/schema/mule/S37-multi-tenant-router-basic http://www.mulesoft.org/schema/mule/S37-multi-tenant-router-basic/current/mule-S37-multi-tenant-router-basic.xsd">
+	<sub-flow name="get-tenant-session-details-from-header" doc:id="4eb6b8b7-6c37-4124-ad31-18e41c941394" >
+		<S37-multi-tenant-router-basic:get-tenant-details doc:id="85f9ea58-6ccc-44ea-b839-d9661f61d47a" config-ref="S37_Multi_Tenant_Router_Basic_Config" tableName="${multiTenantRouter.masterTable}" tenantId="#[attributes.headers.tenantId default '']" target="tenantDetails" doc:name="Get tenant details" />
+		<json-logger:logger doc:name="Got Tenant" doc:id="f40ed000-29fd-455c-9745-931cc5207006" config-ref="JSON_Logger_Config" tracePoint="AFTER_REQUEST" message="Got Tenant details" correlationId="#[vars.correlationId]" >
+			<json-logger:content ><![CDATA[#[output application/json indent=false ---
+{
+ 	tenantId: vars.tenantDetails.tenantId,
+ 	env: p('mule.env')
+}]]]></json-logger:content>
+		</json-logger:logger>
+		<flow-ref doc:name="set-tenant-session-details Flow Reference" doc:id="70c1de19-22f9-425a-b7eb-e970b270177d" name="set-tenant-session-details"/>
+		<ee:transform doc:name="Get assigned trials, sites and roles" doc:id="39ee00fd-bb0f-41a9-8a3d-66edfdf6ee29" >
+			<ee:message />
+			<ee:variables >
+				<ee:set-variable variableName="assignedTrials" ><![CDATA[%dw 2.0
+output application/json
+/*
+ * Returns an array of unique non-empty trial ids that are found in the
+ * tenantRoles header value (from JWT)
+ */
+var tenantRolesArray = read(vars.tenantDetails.tenantRoles, "application/json")
+var tenantRoles = tenantRolesArray map((item) -> (item splitBy ('/'))[0])
+---
+tenantRoles filter((item) -> (sizeOf(trim(item)) > 0)) distinctBy $]]></ee:set-variable>
+				<ee:set-variable variableName="assignedSites" ><![CDATA[%dw 2.0
+output application/json
+/*
+ * Returns an array of unique non-empty site ids that are found in the
+ * tenantRoles header value (from JWT)
+ */
+var tenantRoles = read(vars.tenantDetails.tenantRoles, "application/json")
+var siteIds = tenantRoles map((item) -> (item splitBy ('/'))[1])
+---
+siteIds filter((item) -> (sizeOf(trim(item)) > 0)) distinctBy $]]></ee:set-variable>
+				<ee:set-variable variableName="assignedRoles" ><![CDATA[%dw 2.0
+output application/json
+/*
+ * Returns an array of unique non-empty roles that are found in the
+ * tenantRoles header value (from JWT)
+ */
+var tenantRoles = read(vars.tenantDetails.tenantRoles, "application/json")
+var roles = tenantRoles map((item) -> (item splitBy ('/'))[2])
+---
+roles filter((item) -> (sizeOf(trim(item)) > 0)) distinctBy $]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+	</sub-flow>
+	<flow name="set-tenant-session-details" doc:id="f03c19d7-5c20-4854-8978-6e08718ef834" >
+		<ee:transform doc:name="Set tenant and session details" doc:id="5bae709e-f43b-4445-8b52-cb02e5e0be22">
+			<ee:message>
+			</ee:message>
+			<ee:variables>
+				<ee:set-variable variableName="tenantDetails"><![CDATA[%dw 2.0
+import fail from dw::Runtime
+output application/json
+
+// with validation
+var evaluateTenantRoles = if(isEmpty(attributes.headers.tenantRoles)) fail("tenantRoles header can not be empty") else attributes.headers.tenantRoles
+
+// without validation
+//var evaluateTenantRoles = if(isEmpty(attributes.headers.tenantRoles)) "[]" else attributes.headers.tenantRoles
+
+---
+vars.tenantDetails ++ 
+{
+	"dbHost": attributes.headers.dbHost default "",
+	"dbName": p('mule.env') ++ '/' ++ attributes.headers.tenantId ++ "/<database>",
+	"awsRole": attributes.headers.awsRole default "",
+	"tenantRoles": evaluateTenantRoles
+}]]></ee:set-variable>
+				<ee:set-variable variableName="sessionDetails"><![CDATA[%dw 2.0
+import fail from dw::Runtime
+output application/json
+
+//with validation
+var evaluateSessionPermissions = if (isEmpty(attributes.headers.sessionPermissions)) fail("sessionPermissions header can not be empty") else attributes.headers.sessionPermissions
+var evaluateSessionRoles = if (isEmpty(attributes.headers.sessionRoles)) fail("sessionRoles header can not be empty") else attributes.headers.sessionRoles
+
+//without validation
+//var evaluateSessionPermissions = if (isEmpty(attributes.headers.sessionPermissions)) "[]" else attributes.headers.sessionPermissions
+//var evaluateSessionRoles = if (isEmpty(attributes.headers.sessionRoles)) "[]" else attributes.headers.sessionRoles
+
+var evaluateSessionScope = if (isEmpty(attributes.headers.sessionScope)) "[]" else attributes.headers.sessionScope
+---
+{
+	"sub": attributes.headers.sub default "",
+	"userUuid": attributes.headers.'user-uuid' default "",
+	"sessionPermissions": evaluateSessionPermissions,
+	"sessionRoles": evaluateSessionRoles,
+	"sessionScope": evaluateSessionScope
+}]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<error-handler >
+			<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="98157355-772d-47d0-bb54-c40914b55e54" type="EXPRESSION">
+				<raise-error doc:name="Custom error for headers processing" doc:id="5f8cc7c0-d269-4df9-a726-949ef09e68e9" type="HEADER:INVALID" description="#[((error.description splitBy '\n')[0] splitBy '&quot;')[1]]" />
+			</on-error-propagate>
+		</error-handler>
+	</flow>
+</mule>

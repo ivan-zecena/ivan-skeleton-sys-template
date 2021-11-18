@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns:json-logger="http://www.mulesoft.org/schema/mule/json-logger" xmlns:error-handler-plugin="http://www.mulesoft.org/schema/mule/error-handler-plugin" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd 
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/error-handler-plugin http://www.mulesoft.org/schema/mule/error-handler-plugin/current/mule-error-handler-plugin.xsd
+http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd 
+http://www.mulesoft.org/schema/mule/core:abstract-mixed-content-message-processor">
+    <flow name="main-flow">
+        <http:listener config-ref="HTTP_Listener_config" path="/${api.base}/${api.semantic.version}/*">
+            <http:response statusCode="#[vars['httpStatusCode'] default 200]">
+                <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+            </http:response>
+            <http:error-response statusCode="#[vars['httpStatusCode'] default 500]">
+                <http:body><![CDATA[#[payload]]]></http:body>
+                <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+            </http:error-response>
+        </http:listener>
+        <ee:transform doc:name="Capture correlationId, clientId, and xTransactionId" doc:id="619f502b-d216-4cd1-a6c9-822bd078e385">
+			<ee:message />
+			<ee:variables>
+				<ee:set-variable variableName="correlationId"><![CDATA[%dw 2.0
+import java!java::lang::System
+output application/json
+var s37correlationId = attributes.headers."s37-correlation-id" default ''
+var s37traceId = attributes.headers."s37-client-trace-id" default ''
+var tenantId = attributes.headers.tenantId default ''
+var finalCorrelationId = if ( s37correlationId != '' ) s37correlationId
+                         else if ( s37traceId != '' ) ("patients-api" ++ "|" ++ p('mule.env') ++ "|" ++ tenantId ++ "|" ++ s37traceId ++ "|" ++ (now() as String) ++ "|" ++ uuid())
+                         else ("skeleton-sys-template-api" ++ "|" ++ p('mule.env') ++ "|" ++ tenantId ++ "|" ++ (now() as String) ++ "|" ++ uuid())
+var setSystemPropertyCorrelationId = System::setProperty("correlationId", finalCorrelationId)
+---
+finalCorrelationId]]></ee:set-variable>
+				<ee:set-variable variableName="xTransactionId" ><![CDATA[%dw 2.0
+output application/java
+---
+attributes['headers']['x-correlation-id'] default correlationId]]></ee:set-variable>
+				<ee:set-variable variableName="clientId" ><![CDATA[%dw 2.0
+output application/java
+---
+attributes['headers']['client_id'] default  null]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<json-logger:logger doc:name="START" doc:id="2c68bc79-2019-4973-99be-b73fe0e7f962" config-ref="JSON_Logger_Config" message="Request recieved. Passing to APIkit." correlationId="#[vars.correlationId]">
+			<json-logger:content><![CDATA[#[output application/json indent=false ---
+{
+ 	"client_id": vars.clientId,
+ 	"x-transaction-id": vars.xTransactionId,
+ 	"sub": attributes.headers.sub default "",
+ 	"sessionRoles": attributes.headers.sessionRoles default ""
+}]]]></json-logger:content>
+		</json-logger:logger>
+		<apikit:router config-ref="version-template-config" />
+		<error-handler>
+			<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="ded427ac-3bbb-44e0-a30b-df4a50713426" >
+				<error-handler-plugin:on-error doc:name="On error" doc:id="c48d56a7-8dba-472e-a67f-a6dfff271286" errorTypes="VALIDATION:EMPTY_COLLECTION, RESOURCE:NOT_FOUND, RESOURCE:DUPE_NUMBER, RESOURCE:FORBIDDEN, HEADER:INVALID" errorCodes="404, 404, 409, 403, 400" errorMessages="Result not found, Resource not found, Duplicated resource, Resource forbidden, Error in request header" correlationId="#[vars.correlationId]">
+		        	<error-handler-plugin:custom-error-json><![CDATA[#[vars['customErrorJSON']]]]></error-handler-plugin:custom-error-json>
+		        </error-handler-plugin:on-error>
+		        <set-payload value="#[payload]" doc:name="Error Payload" doc:id="5814e9a5-02d0-468f-8375-e6383f2e9951" mimeType="application/json" />
+		        <set-variable value="#[attributes['httpStatusCode']]" doc:name="Set HTTP Status Code" doc:id="984cd896-0320-4e8d-88eb-d0dd7c56c035" variableName="httpStatusCode" />
+		        <json-logger:logger doc:name="Error Logger" doc:id="da2de267-74e0-4583-a150-feff66b493a7" priority="ERROR" tracePoint="EXCEPTION" message="#[output text/plain --- if(vars['clientId'] == null) payload.results[0].statusSet[0].details  else payload.results[0].statusSet[0].details ++ ' for the client_id'  ++ vars['clientId'] as String]" config-ref="JSON_Logger_Config" correlationId="#[vars.correlationId]">
+		        </json-logger:logger>
+			</on-error-propagate>
+        </error-handler>
+    </flow>
+    <flow name="get:\version:version-template-config">
+		<flow-ref doc:name="get-version-details Flow Reference" doc:id="e4c0b0ca-c115-4f22-ab34-7e7213b23fd6" name="get-version-details"/>
+    </flow>
+	<flow name="Copy_of_put:\platform\sample-template\(sampleResourceID):application\json:template-api-config" doc:id="a9c8a549-79e8-41c4-b47d-a29b2eddf645" >
+		<ee:transform doc:name="Copy_of_Transform Message" doc:id="f880e647-1dfc-4cc4-9b6a-175f8d05af71" >
+			<ee:variables >
+				<ee:set-variable variableName="sampleResourceID" ><![CDATA[attributes.uriParams.'sampleResourceID']]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<ee:transform doc:name="Copy_of_Transform Message" doc:id="2b77dd58-8812-41f2-8cef-3522c31fd12d" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+  correlationId: "0be21e6b-89aa-4a14-99b3-aefb0f97e38b",
+  timestamp: 1581119702090,
+  id: "4168a390-4a05-11ea-b0d5-19bc34469161"
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="Copy_of_delete:\platform\sample-template\(sampleResourceID):template-api-config" doc:id="07674177-bd37-4257-9add-11105154ca7b" >
+		<ee:transform doc:name="Copy_of_Transform Message" doc:id="c8845869-4df8-4914-b1d6-0720258c999d" >
+			<ee:variables >
+				<ee:set-variable variableName="sampleResourceID" ><![CDATA[attributes.uriParams.'sampleResourceID']]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<logger level="INFO" doc:name="Copy_of_Logger" doc:id="280f8e62-483e-4804-bab5-4da016d014b2" message="delete:\platform\sample-template\(sampleResourceID):template-api-config" />
+	</flow>
+	<flow name="Copy_of_routerFlow" doc:id="291e0298-cda6-4f90-bbf8-7b46b9b20d99" >
+		<ee:transform doc:name="Copy_of_Transform Message" doc:id="4d953531-16a2-41f5-b86a-cba289ecc4d3" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+  healthy: true,
+  uptime: "tbd",
+  pom_version: "1.0.3",
+  env: "dev2",
+  git_dirty: true,
+  git_branch: "NXL-2428-sha1-version-endpoint",
+  git_commitSha: "3238d123811afe962b524836687e6a01759aee7a"
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="Copy_of_get:\platform\version:template-api-config" doc:id="345c6b42-3b49-4e83-91e3-341b0b471f09" >
+		<ee:transform doc:name="Copy_of_Transform Message" doc:id="03c62328-9b02-4f08-b9ba-1e2cac77186a" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+  healthy: true,
+  uptime: "tbd",
+  pom_version: "1.0.3",
+  env: "dev2",
+  git_dirty: true,
+  git_branch: "NXL-2428-sha1-version-endpoint",
+  git_commitSha: "3238d123811afe962b524836687e6a01759aee7a"
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="Copy_of_post:\platform\sample-template\(sampleResourceID):application\json:template-api-config" doc:id="28982b03-f678-4ece-9f14-0bb46e01c4d1" >
+		<ee:transform doc:name="Copy_of_Transform Message" doc:id="0f4f3635-214d-4762-8b3f-74d8b3c9445e" >
+			<ee:variables >
+				<ee:set-variable variableName="sampleResourceID" ><![CDATA[attributes.uriParams.'sampleResourceID']]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<ee:transform doc:name="Copy_of_Transform Message" doc:id="30eae896-f75b-4eb6-9b4a-03b2086e417a" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+  correlationId: "0be21e6b-89aa-4a14-99b3-aefb0f97e38b",
+  timestamp: 1581119702090,
+  id: "4168a390-4a05-11ea-b0d5-19bc34469161"
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="Copy_of_get:\platform\sample-template\(sampleResourceID):template-api-config" doc:id="41392681-13a0-49ca-9f3f-8f8ddb98bb55" >
+		<ee:transform doc:name="Copy_of_Transform Message" doc:id="f9340617-f99c-4777-a978-8fcf42d6a0c6" >
+			<ee:variables >
+				<ee:set-variable variableName="sampleResourceID" ><![CDATA[attributes.uriParams.'sampleResourceID']]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<ee:transform doc:name="Copy_of_Transform Message" doc:id="18524c33-cc9e-4e2c-af6e-89f7bd9ff2cd" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+  sampleType: "document",
+  contentType: "application/pdf",
+  title: "My First Document",
+  file: "my-doc.pdf",
+  version: "v1"
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+</mule>

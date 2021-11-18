@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:json-logger="http://www.mulesoft.org/schema/mule/json-logger" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd">
+	<sub-flow name="validate-scope" doc:id="d65d5d28-fa65-4969-b567-edb5856282fc" >
+		<set-variable value="#[%dw 2.0&#10;output application/json&#10;var sessionRoles = (read(attributes.headers.sessionRoles, &quot;application/json&quot;)) distinctBy $&#10;var isPatient = ((sessionRoles contains 'patient') or (sessionRoles contains 'Patient')) as Boolean&#10;var sessionUuid = attributes.headers.'user-uuid' as String&#10;var isUuidEqual = (attributes.uriParams.patientId == sessionUuid) as Boolean&#10;---&#10;((isPatient and isUuidEqual) or !isPatient) as Boolean]" doc:name="Scope validation logic" doc:id="b85347a2-ad9e-48bb-af41-b74a24e2c327" variableName="isScopeValid" />
+		<choice doc:name="Is scope valid?" doc:id="feb00e4e-5df3-44b6-8058-614d3cd27fa2" >
+			<when expression="#[vars.isScopeValid == false]" >
+				<raise-error doc:name="Throw error on invalid scope" doc:id="6b30d30c-d39f-4905-84a1-5f2d79f58461" type="RESOURCE:FORBIDDEN" description="Invalid scope" />
+			</when>
+			<otherwise >
+				<json-logger:logger doc:name="Flow Logger" doc:id="47ce8d58-d9c0-4d1c-aeac-43f7dd57acf6" config-ref="JSON_Logger_Config" tracePoint="FLOW" message="Valid scope" correlationId="#[vars.correlationId]" >
+					<json-logger:content ><![CDATA[#[output application/json indent=false ---
+{
+ 	isScopeValid: vars.isScopeValid
+}]]]></json-logger:content>
+				</json-logger:logger>
+			</otherwise>
+		</choice>
+	</sub-flow>
+</mule>

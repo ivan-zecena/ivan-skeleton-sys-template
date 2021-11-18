@@ -1,0 +1,22 @@
+
+java.lang.RuntimeException: java.util.concurrent.ExecutionException: org.mule.runtime.deployment.model.api.DeploymentInitException: PropertyNotFoundException: Couldn't find configuration property value for key ${mule.env} from properties provider environment properties provider - within resolver Deployment properties trying to process key mule.env - within resolver global-properties configuration attributes trying to process key mule.env - within resolver environment properties provider trying to process key mule.env
+	at org.mule.runtime.module.embedded.internal.DefaultEmbeddedContainerBuilder$1.executeUsingReflection(DefaultEmbeddedContainerBuilder.java:301)
+	at org.mule.runtime.module.embedded.internal.DefaultEmbeddedContainerBuilder$1.access$600(DefaultEmbeddedContainerBuilder.java:129)
+	at org.mule.runtime.module.embedded.internal.DefaultEmbeddedContainerBuilder$1$1.deployApplication(DefaultEmbeddedContainerBuilder.java:232)
+	at org.mule.munit.remote.container.EmbeddedContainer.deployApplication(EmbeddedContainer.java:66)
+	at org.mule.munit.remote.container.ContainerSuiteRunDispatcher.performSuiteDeploy(ContainerSuiteRunDispatcher.java:181)
+	at org.mule.munit.remote.container.ContainerSuiteRunDispatcher.runSuites(ContainerSuiteRunDispatcher.java:147)
+	at org.mule.munit.remote.RemoteRunner.run(RemoteRunner.java:85)
+	at org.mule.munit.remote.RemoteRunner.main(RemoteRunner.java:67)
+Caused by: java.util.concurrent.ExecutionException: org.mule.runtime.deployment.model.api.DeploymentInitException: PropertyNotFoundException: Couldn't find configuration property value for key ${mule.env} from properties provider environment properties provider - within resolver Deployment properties trying to process key mule.env - within resolver global-properties configuration attributes trying to process key mule.env - within resolver environment properties provider trying to process key mule.env
+	at java.util.concurrent.FutureTask.report(FutureTask.java:122)
+	at java.util.concurrent.FutureTask.get(FutureTask.java:192)
+	at org.mule.runtime.module.embedded.internal.DefaultEmbeddedContainerBuilder$1.executeUsingReflection(DefaultEmbeddedContainerBuilder.java:299)
+	... 7 more
+Caused by: org.mule.runtime.deployment.model.api.DeploymentInitException: PropertyNotFoundException: Couldn't find configuration property value for key ${mule.env} from properties provider environment properties provider - within resolver Deployment properties trying to process key mule.env - within resolver global-properties configuration attributes trying to process key mule.env - within resolver environment properties provider trying to process key mule.env
+Caused by: org.mule.runtime.core.api.config.ConfigurationException: Couldn't find configuration property value for key ${mule.env} from properties provider environment properties provider - within resolver Deployment properties trying to process key mule.env - within resolver global-properties configuration attributes trying to process key mule.env - within resolver environment properties provider trying to process key mule.env
+Caused by: org.mule.runtime.config.internal.dsl.model.config.PropertyNotFoundException: Couldn't find configuration property value for key ${mule.env} from properties provider environment properties provider - within resolver Deployment properties trying to process key mule.env - within resolver global-properties configuration attributes trying to process key mule.env - within resolver environment properties provider trying to process key mule.env
+
+=============================================================================
+Tests run: 1 - Failures: 0 - Errors: 1 - Skipped: 0 - Time elapsed: 0.000 sec
+=============================================================================

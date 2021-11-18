@@ -1,0 +1,52 @@
+{
+  "configs": [
+    "logic-test-suite.xml",
+    "router.xml",
+    "validation/trialId-validation.xml",
+    "config.xml",
+    "common/headers-processing.xml",
+    "logic/get-version.xml",
+    "validation/scope-validation.xml",
+    "validation/siteId-validation.xml"
+  ],
+  "secureProperties": [
+    "anypoint.platform.client_secret",
+    "encryption.key",
+    "secure::multiTenantRouter.secretKey"
+  ],
+  "redeploymentEnabled": true,
+  "name": "8db5810f-1022-47cc-856e-2156f651647f:ivan-skeleton-sys-template:1.0.0",
+  "minMuleVersion": "4.3.0",
+  "requiredProduct": "MULE_EE",
+  "classLoaderModelLoaderDescriptor": {
+    "id": "mule",
+    "attributes": {
+      "exportedResources": [
+        "log4j2.xml",
+        "logic/get-version.xml",
+        "certificates/httplistener.jks",
+        "config.xml",
+        "common/headers-processing.xml",
+        "properties/configurations/config-stage.yaml",
+        "properties/configurations/config-dev1.yaml",
+        "properties/configurations/config-prod.yaml",
+        "properties/configurations/config-extval.yaml",
+        "properties/configurations/config-intval.yaml",
+        "properties/configurations/config-common.yaml",
+        "properties/configurations/config-dev2.yaml",
+        "properties/git.properties",
+        "router.xml",
+        "validation/trialId-validation.xml",
+        "validation/siteId-validation.xml",
+        "validation/scope-validation.xml",
+        "log4j2-test.xml"
+      ],
+      "includeTestDependencies": "true",
+      "exportedPackages": []
+    }
+  },
+  "bundleDescriptorLoader": {
+    "id": "mule",
+    "attributes": {}
+  }
+}

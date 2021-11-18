@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:json-logger="http://www.mulesoft.org/schema/mule/json-logger" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd">
+	<sub-flow name="validate-siteId" doc:id="501b0863-ca2b-4725-b895-2959927e81d5" >
+		<set-variable value="#[%dw 2.0&#10;import * from dw::core::Arrays&#10;output application/json&#10;var siteId = attributes.uriParams.'siteId'&#10;var sessionScope = if(!isEmpty(attributes.headers.sessionScope)) read(attributes.headers.sessionScope, &quot;application/json&quot;) else []&#10;---&#10;sessionScope some ($ contains siteId)]" doc:name="SiteId validation logic" doc:id="e2adc22c-d795-4761-8c3b-010802147a40" variableName="isSiteIdValid" />
+		<choice doc:name="Is siteId valid?" doc:id="4d329c2e-1e5d-435c-a321-b30cfbf44043" >
+			<when expression="#[vars.isSiteIdValid == false]" >
+				<raise-error doc:name="SiteId mismatch with sessionScope" doc:id="b5a4e512-4010-48b0-adda-bef98d2971ec" type="RESOURCE:FORBIDDEN" description="Mismatch between siteId in uri-param and sessionScope in header." />
+			</when>
+			<otherwise >
+				<json-logger:logger doc:name="Flow Logger" doc:id="47058704-cba9-43e3-99e3-a1dd6afc41a3" config-ref="JSON_Logger_Config" tracePoint="FLOW" message="Valid SiteId" correlationId="#[vars.correlationId]" >
+					<json-logger:content ><![CDATA[#[output application/json indent=false ---
+{
+ 	siteId: attributes.uriParams.'siteId',
+ 	siteIdValid: vars.siteIdValid
+}]]]></json-logger:content>
+				</json-logger:logger>
+			</otherwise>
+		</choice>
+	</sub-flow>
+</mule>

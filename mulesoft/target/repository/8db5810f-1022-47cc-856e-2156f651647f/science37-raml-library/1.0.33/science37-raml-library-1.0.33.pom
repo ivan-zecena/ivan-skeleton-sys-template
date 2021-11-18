@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>8db5810f-1022-47cc-856e-2156f651647f</groupId>
+  <artifactId>science37-raml-library</artifactId>
+  <version>1.0.33</version>
+  <name>Science37 RAML Library</name>
+  <properties>
+    <classifier>raml-fragment</classifier>
+    <main>libraries/science37-raml-library.raml</main>
+    <originalFormatVersion>1.0</originalFormatVersion>
+    <projectId>74268851-19c7-4d2a-b168-1723f2c62ba3</projectId>
+    <branchId>master</branchId>
+    <commitId>cf18c399a2868c4b020858038e75a8e87cbfb486</commitId>
+    <type>raml-fragment</type>
+    <mainFile>libraries/science37-raml-library.raml</mainFile>
+  </properties>
+  <repositories>
+    <repository>
+      <id>anypoint-exchange</id>
+      <url>https://maven.anypoint.mulesoft.com/api/v3/maven</url>
+    </repository>
+  </repositories>
+</project>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>8db5810f-1022-47cc-856e-2156f651647f</groupId>
+  <artifactId>ivan-test-template-api</artifactId>
+  <version>1.0.0</version>
+  <name>ivan-test-template-api</name>
+  <properties>
+    <classifier>raml</classifier>
+    <main>template-api.raml</main>
+    <originalFormatVersion>1.0</originalFormatVersion>
+    <apiVersion>v1</apiVersion>
+    <projectId>92bfeca0-c68f-45a7-af69-02f2494f9d6e</projectId>
+    <branchId>master</branchId>
+    <commitId>a2b34401b861e7a74bd2a4b8819e7fe806ef076e</commitId>
+    <keywords/>
+    <type>rest-api</type>
+    <mainFile>template-api.raml</mainFile>
+  </properties>
+  <dependencies>
+    <dependency>
+      <groupId>8db5810f-1022-47cc-856e-2156f651647f</groupId>
+      <version>1.0.33</version>
+      <artifactId>science37-raml-library</artifactId>
+      <type>zip</type>
+      <classifier>raml-fragment</classifier>
+    </dependency>
+  </dependencies>
+  <repositories>
+    <repository>
+      <id>anypoint-exchange</id>
+      <url>https://maven.anypoint.mulesoft.com/api/v3/maven</url>
+    </repository>
+  </repositories>
+</project>

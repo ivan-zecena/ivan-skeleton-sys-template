@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:json-logger="http://www.mulesoft.org/schema/mule/json-logger" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd">
+	<sub-flow name="get-version-details" doc:id="430a6530-6b20-402c-93c5-3b67e69fdfed" >
+		<json-logger:logger doc:name="Get Version" doc:id="df9dbd9a-8c63-467b-924f-7eab583e2e1b" message="Getting git SHA1 version........" correlationId="#[vars.correlationId]" config-ref="JSON_Logger_Config" tracePoint="FLOW">
+			<json-logger:content ><![CDATA[Git SHA1 version.]]></json-logger:content>
+		</json-logger:logger>
+		<set-payload value="#[%dw 2.0&#10;output application/json&#10;---&#10;{&#10;	&quot;healthy&quot;: true,&#10;	&quot;uptime&quot;: p('git.build.time'),&#10;	&quot;pom_version&quot;: p('git.build.version'),&#10;	&quot;env&quot;: p('mule.env'),&#10;	&quot;git_dirty&quot;: p('git.dirty'),&#10;	&quot;git_branch&quot;: p('git.branch'),&#10;	&quot;git_commitSha&quot;: p('git.commit.id.full')&#10;}]" doc:name="Set Payload" doc:id="7b8097ac-6981-4f41-a92d-2c608e055dbf" />
+		<json-logger:logger doc:name="Got Version" doc:id="844b9d57-cd4b-4ebf-a216-b11a62833e0e" config-ref="JSON_Logger_Config" tracePoint="END" message="Returning git SHA1 version........" correlationId="#[vars.correlationId]" >
+			<json-logger:content ><![CDATA[#[output application/json indent=false ---
+{
+ 	"healthy": true,
+ 	"env": p('mule.env')
+}]]]></json-logger:content>
+		</json-logger:logger>
+	</sub-flow>
+</mule>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:validation="http://www.mulesoft.org/schema/mule/validation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:munit="http://www.mulesoft.org/schema/mule/munit"
+	xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd
+http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd">
+	<munit:config name="logic-test-suite.xml" />
+	<munit:test name="logic-test-suite-getVersionDetailsTest" doc:id="bc02d15d-5099-452b-bf49-79bc0c75cbc7" description="Test">
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to get-version-details" doc:id="8420af54-20fe-4917-930c-6d655a2fb6ee" name="get-version-details"/>
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="d28ec79d-ccb3-4ab2-896d-134b08596992" actual="#[payload.healthy]" expected='#[true]'/>
+		</munit:validation>
+	</munit:test>
+
+
+</mule>

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="MULE_EE.4.3.0.logic-test-suite" time="0.0" failures="0" errors="1" skipped="0" tests="1">
+  <properties>
+    <property key="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
+    <property key="sun.boot.library.path" value="/Library/Internet Plug-Ins/JavaAppletPlugin.plugin/Contents/Home/lib"/>
+    <property key="java.vm.version" value="25.311-b11"/>
+    <property key="gopherProxySet" value="false"/>
+    <property key="maven.multiModuleProjectDirectory" value="/Users/ivan.zecena/Work/anypoint projects/ivan-skeleton-sys-template/mulesoft"/>
+    <property key="java.vm.vendor" value="Oracle Corporation"/>
+    <property key="java.vendor.url" value="http://java.oracle.com/"/>
+    <property key="guice.disable.misplaced.annotation.check" value="true"/>
+    <property key="path.separator" value=":"/>
+    <property key="java.vm.name" value="Java HotSpot(TM) 64-Bit Server VM"/>
+    <property key="file.encoding.pkg" value="sun.io"/>
+    <property key="user.country" value="US"/>
+    <property key="sun.java.launcher" value="SUN_STANDARD"/>
+    <property key="sun.os.patch.level" value="unknown"/>
+    <property key="java.vm.specification.name" value="Java Virtual Machine Specification"/>
+    <property key="user.dir" value="/Users/ivan.zecena/Work/anypoint projects/ivan-skeleton-sys-template/mulesoft"/>
+    <property key="java.runtime.version" value="1.8.0_311-b11"/>
+    <property key="java.awt.graphicsenv" value="sun.awt.CGraphicsEnvironment"/>
+    <property key="java.endorsed.dirs" value="/Library/Internet Plug-Ins/JavaAppletPlugin.plugin/Contents/Home/lib/endorsed"/>
+    <property key="os.arch" value="x86_64"/>
+    <property key="java.io.tmpdir" value="/var/folders/_5/8r56q_jj46b5lv279_nnxk8r0000gp/T/"/>
+    <property key="line.separator" value="&#xa;"/>
+    <property key="java.vm.specification.vendor" value="Oracle Corporation"/>
+    <property key="os.name" value="Mac OS X"/>
+    <property key="classworlds.conf" value="/Users/ivan.zecena/Work/apache-maven-3.8.3/bin/m2.conf"/>
+    <property key="sun.jnu.encoding" value="UTF-8"/>
+    <property key="altDeploymentRepository" value="anypoint-exchange-v2::default::https://maven.anypoint.mulesoft.com/api/v2/organizations/8db5810f-1022-47cc-856e-2156f651647f/maven"/>
+    <property key="java.library.path" value="/Users/ivan.zecena/Library/Java/Extensions:/Library/Java/Extensions:/Network/Library/Java/Extensions:/System/Library/Java/Extensions:/usr/lib/java:."/>
+    <property key="maven.conf" value="/Users/ivan.zecena/Work/apache-maven-3.8.3/conf"/>
+    <property key="java.specification.name" value="Java Platform API Specification"/>
+    <property key="java.class.version" value="52.0"/>
+    <property key="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
+    <property key="maven.repo.local" value="/Users/ivan.zecena/.m2/repository"/>
+    <property key="attachMuleSources" value="true"/>
+    <property key="os.version" value="10.16"/>
+    <property key="library.jansi.path" value="/Users/ivan.zecena/Work/apache-maven-3.8.3/lib/jansi-native"/>
+    <property key="http.nonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
+    <property key="user.home" value="/Users/ivan.zecena"/>
+    <property key="user.timezone" value="America/Chicago"/>
+    <property key="java.awt.printerjob" value="sun.lwawt.macosx.CPrinterJob"/>
+    <property key="file.encoding" value="UTF-8"/>
+    <property key="java.specification.version" value="1.8"/>
+    <property key="java.class.path" value="/Users/ivan.zecena/Work/apache-maven-3.8.3/boot/plexus-classworlds-2.6.0.jar"/>
+    <property key="user.name" value="ivan.zecena"/>
+    <property key="java.vm.specification.version" value="1.8"/>
+    <property key="sun.java.command" value="org.codehaus.plexus.classworlds.launcher.Launcher -f /Users/ivan.zecena/Work/anypoint projects/ivan-skeleton-sys-template/mulesoft/pom.xml clean deploy -DaltDeploymentRepository=anypoint-exchange-v2::default::https://maven.anypoint.mulesoft.com/api/v2/organizations/8db5810f-1022-47cc-856e-2156f651647f/maven -DattachMuleSources=true -Dmaven.repo.local=/Users/ivan.zecena/.m2/repository --global-settings /Users/ivan.zecena/Work/apache-maven-3.8.3/conf/settings.xml --settings /var/folders/_5/8r56q_jj46b5lv279_nnxk8r0000gp/T/settings-temp-directory/79c06ff0-f345-484c-80f4-6e2a1e0632b9.xml"/>
+    <property key="java.home" value="/Library/Internet Plug-Ins/JavaAppletPlugin.plugin/Contents/Home"/>
+    <property key="sun.arch.data.model" value="64"/>
+    <property key="user.language" value="en"/>
+    <property key="java.specification.vendor" value="Oracle Corporation"/>
+    <property key="awt.toolkit" value="sun.lwawt.macosx.LWCToolkit"/>
+    <property key="java.vm.info" value="mixed mode"/>
+    <property key="java.version" value="1.8.0_311"/>
+    <property key="java.ext.dirs" value="/Users/ivan.zecena/Library/Java/Extensions:/Library/Internet Plug-Ins/JavaAppletPlugin.plugin/Contents/Home/lib/ext:/Library/Java/Extensions:/Network/Library/Java/Extensions:/System/Library/Java/Extensions:/usr/lib/java"/>
+    <property key="sun.boot.class.path" value="/Library/Internet Plug-Ins/JavaAppletPlugin.plugin/Contents/Home/lib/resources.jar:/Library/Internet Plug-Ins/JavaAppletPlugin.plugin/Contents/Home/lib/rt.jar:/Library/Internet Plug-Ins/JavaAppletPlugin.plugin/Contents/Home/lib/sunrsasign.jar:/Library/Internet Plug-Ins/JavaAppletPlugin.plugin/Contents/Home/lib/jsse.jar:/Library/Internet Plug-Ins/JavaAppletPlugin.plugin/Contents/Home/lib/jce.jar:/Library/Internet Plug-Ins/JavaAppletPlugin.plugin/Contents/Home/lib/charsets.jar:/Library/Internet Plug-Ins/JavaAppletPlugin.plugin/Contents/Home/lib/jfr.jar:/Library/Internet Plug-Ins/JavaAppletPlugin.plugin/Contents/Home/classes"/>
+    <property key="java.vendor" value="Oracle Corporation"/>
+    <property key="maven.home" value="/Users/ivan.zecena/Work/apache-maven-3.8.3"/>
+    <property key="file.separator" value="/"/>
+    <property key="java.vendor.url.bug" value="http://bugreport.sun.com/bugreport/"/>
+    <property key="sun.io.unicode.encoding" value="UnicodeBig"/>
+    <property key="sun.cpu.endian" value="little"/>
+    <property key="socksNonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
+    <property key="ftp.nonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
+    <property key="sun.cpu.isalist" value=""/>
+    <property key="munit.system.properties.file" value="/Users/ivan.zecena/Work/anypoint projects/ivan-skeleton-sys-template/mulesoft/target/user.system.properties"/>
+    <property key="org.glassfish.grizzly.DEFAULT_MEMORY_MANAGER" value="org.glassfish.grizzly.memory.HeapMemoryManager"/>
+  </properties>
+  <testcase time="0.0" name="logic-test-suite.xml" classname="MULE_EE.4.3.0.logic-test-suite">
+    <error>java.lang.RuntimeException: java.util.concurrent.ExecutionException: org.mule.runtime.deployment.model.api.DeploymentInitException: PropertyNotFoundException: Couldn&apos;t find configuration property value for key ${mule.env} from properties provider environment properties provider - within resolver Deployment properties trying to process key mule.env - within resolver global-properties configuration attributes trying to process key mule.env - within resolver environment properties provider trying to process key mule.env
+	at org.mule.runtime.module.embedded.internal.DefaultEmbeddedContainerBuilder$1.executeUsingReflection(DefaultEmbeddedContainerBuilder.java:301)
+	at org.mule.runtime.module.embedded.internal.DefaultEmbeddedContainerBuilder$1.access$600(DefaultEmbeddedContainerBuilder.java:129)
+	at org.mule.runtime.module.embedded.internal.DefaultEmbeddedContainerBuilder$1$1.deployApplication(DefaultEmbeddedContainerBuilder.java:232)
+	at org.mule.munit.remote.container.EmbeddedContainer.deployApplication(EmbeddedContainer.java:66)
+	at org.mule.munit.remote.container.ContainerSuiteRunDispatcher.performSuiteDeploy(ContainerSuiteRunDispatcher.java:181)
+	at org.mule.munit.remote.container.ContainerSuiteRunDispatcher.runSuites(ContainerSuiteRunDispatcher.java:147)
+	at org.mule.munit.remote.RemoteRunner.run(RemoteRunner.java:85)
+	at org.mule.munit.remote.RemoteRunner.main(RemoteRunner.java:67)
+Caused by: java.util.concurrent.ExecutionException: org.mule.runtime.deployment.model.api.DeploymentInitException: PropertyNotFoundException: Couldn&apos;t find configuration property value for key ${mule.env} from properties provider environment properties provider - within resolver Deployment properties trying to process key mule.env - within resolver global-properties configuration attributes trying to process key mule.env - within resolver environment properties provider trying to process key mule.env
+	at java.util.concurrent.FutureTask.report(FutureTask.java:122)
+	at java.util.concurrent.FutureTask.get(FutureTask.java:192)
+	at org.mule.runtime.module.embedded.internal.DefaultEmbeddedContainerBuilder$1.executeUsingReflection(DefaultEmbeddedContainerBuilder.java:299)
+	... 7 more
+Caused by: org.mule.runtime.deployment.model.api.DeploymentInitException: PropertyNotFoundException: Couldn&apos;t find configuration property value for key ${mule.env} from properties provider environment properties provider - within resolver Deployment properties trying to process key mule.env - within resolver global-properties configuration attributes trying to process key mule.env - within resolver environment properties provider trying to process key mule.env
+Caused by: org.mule.runtime.core.api.config.ConfigurationException: Couldn&apos;t find configuration property value for key ${mule.env} from properties provider environment properties provider - within resolver Deployment properties trying to process key mule.env - within resolver global-properties configuration attributes trying to process key mule.env - within resolver environment properties provider trying to process key mule.env
+Caused by: org.mule.runtime.config.internal.dsl.model.config.PropertyNotFoundException: Couldn&apos;t find configuration property value for key ${mule.env} from properties provider environment properties provider - within resolver Deployment properties trying to process key mule.env - within resolver global-properties configuration attributes trying to process key mule.env - within resolver environment properties provider trying to process key mule.env
+</error>
+  </testcase>
+</testsuite>

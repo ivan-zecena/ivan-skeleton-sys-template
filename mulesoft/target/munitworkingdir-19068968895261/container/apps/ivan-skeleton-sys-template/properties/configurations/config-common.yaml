@@ -1,0 +1,21 @@
+https:
+  port: "8082"
+
+api:
+  base: "api"
+  semantic:
+    version: "v1"
+
+json:
+  logger:
+    disabledFields: ""
+    prettyPrint: "true"
+    locationInfo: "true"
+    # Modify timestamp dateformat / timezone
+    # - DateTime: Defaults to ISO format
+    # - TimeZone: Defaults to UTC. Refer to https://en.wikipedia.org/wiki/List_of_tz_database_time_zones for valid timezones
+    #dateformat: "yyyy-MM-dd HH:mm:ss.SSS"
+    #timezone: "US/Eastern"
+    application:
+      name: ivan-skeleton-sys-template
+      version: 1.0.0

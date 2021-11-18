@@ -1,0 +1,82 @@
+{
+  "runToken": "20f84a28-735c-413f-96a7-daa37812f717",
+  "projectName": "ivan-skeleton-sys-template",
+  "domainLocation": "",
+  "tags": [],
+  "testNames": [],
+  "suitePaths": [
+    "logic-test-suite.xml"
+  ],
+  "allSuitePaths": [
+    "logic-test-suite.xml"
+  ],
+  "skipAfterFailure": false,
+  "notifierConfigurations": [
+    {
+      "clazz": "org.mule.munit.remote.notifiers.ConsoleNotifier",
+      "parameters": [
+        {
+          "name": "runToken",
+          "type": "java.lang.String",
+          "value": "20f84a28-735c-413f-96a7-daa37812f717"
+        }
+      ]
+    }
+  ],
+  "coverageConfiguration": {
+    "runCoverage": true,
+    "randomizeCoveragePort": true,
+    "suitePaths": [
+      "logic-test-suite.xml"
+    ],
+    "ignoredFiles": [],
+    "ignoredFlowNames": []
+  },
+  "containerConfiguration": {
+    "type": "EMBEDDED",
+    "value": {
+      "mavenConfiguration": {
+        "settingsXmlFilePath": "/var/folders/_5/8r56q_jj46b5lv279_nnxk8r0000gp/T/settings-temp-directory/79c06ff0-f345-484c-80f4-6e2a1e0632b9.xml",
+        "globalSettingsXmlFilePath": "/Users/ivan.zecena/Work/apache-maven-3.8.3/conf/settings.xml",
+        "mavenRepositoryDirectoryPath": "/Users/ivan.zecena/.m2/repository",
+        "securitySettingsFilePath": "/Users/ivan.zecena/.m2/settings-security.xml",
+        "activeProfiles": [
+          "dev2",
+          "mule-extra-repos",
+          "Mule"
+        ],
+        "offlineMode": false,
+        "forcePolicyUpdate": true,
+        "ignoreArtifactDescriptorRepositories": false,
+        "remoteRepositories": [
+          {
+            "id": "mule-public",
+            "url": "https://repository.mulesoft.org/nexus/content/repositories/public"
+          },
+          {
+            "id": "mulesoft-releases",
+            "url": "https://repository.mulesoft.org/releases/"
+          },
+          {
+            "id": "central",
+            "url": "https://repo.maven.apache.org/maven2"
+          }
+        ]
+      },
+      "serverPluginConfigurations": [
+        {
+          "groupId": "com.mulesoft.munit.plugins",
+          "artifactId": "munit-coverage-plugin",
+          "version": "2.3.5",
+          "type": "jar",
+          "classifier": "mule-server-plugin"
+        }
+      ],
+      "runtimeId": "4.3.0",
+      "product": "MULE_EE",
+      "munitWorkingDirectoryPath": "/Users/ivan.zecena/Work/anypoint projects/ivan-skeleton-sys-template/mulesoft/target/munitworkingdir-19068968895261",
+      "log4JConfigurationFilePath": "/Users/ivan.zecena/Work/anypoint projects/ivan-skeleton-sys-template/mulesoft/target/test-classes/log4j2-test.xml",
+      "type": "EMBEDDED"
+    }
+  }
+}

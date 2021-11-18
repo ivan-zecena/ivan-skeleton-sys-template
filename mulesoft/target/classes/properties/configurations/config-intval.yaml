@@ -1,0 +1,15 @@
+api:
+  id: "${api.id}"
+    
+listner:
+  reconnection:
+      frequency: "2000"
+      attempts: "3"
+  timeout:
+    connection: "30000"
+      
+multiTenantRouter:
+  accessKey: ""
+  secretKey: ""
+  region: "${aws.region}"
+  masterTable: "${mule.env}-tenants-catalog"

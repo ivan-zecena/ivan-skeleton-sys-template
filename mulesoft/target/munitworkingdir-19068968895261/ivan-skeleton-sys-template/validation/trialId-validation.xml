@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:json-logger="http://www.mulesoft.org/schema/mule/json-logger" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd">
+	<sub-flow name="validate-trialId" doc:id="3a6f3e67-2b6b-4c5c-b410-7316b2b19992" >
+		<set-variable value="#[%dw 2.0&#10;import * from dw::core::Arrays&#10;output application/json&#10;var trialId = attributes.uriParams.'trialId'&#10;var tenantRoles = if(!isEmpty(attributes.headers.tenantRoles)) read(attributes.headers.tenantRoles, &quot;application/json&quot;) else []&#10;---&#10;tenantRoles some ($ contains trialId)]" doc:name="TrialId validation logic" doc:id="00241244-b13b-434a-a035-5e39b19dc106" variableName="isTrialIdValid"/>
+		<choice doc:name="Is trialId valid?" doc:id="52556336-2f5c-4f07-b904-c6c3696c1aa6" >
+			<when expression="#[vars.isTrialIdValid == false]" >
+				<raise-error doc:name="TrialId mismatch with tenantRoles" doc:id="665909a6-84da-46dc-913e-f7b120b25321" type="RESOURCE:FORBIDDEN" description="Mismatch between trialId in uri-param and tenantRoles in header." />
+			</when>
+			<otherwise >
+				<json-logger:logger doc:name="Flow Logger" doc:id="3f39a8ee-7296-48ff-8c3b-31b3731439b1" config-ref="JSON_Logger_Config" tracePoint="FLOW" message="Valid trialId" correlationId="#[vars.correlationId]" >
+					<json-logger:content ><![CDATA[#[output application/json indent=false ---
+{
+ 	trialId: attributes.uriParams.'trialId',
+ 	isTrialIdValid: vars.isTrialIdValid
+}]]]></json-logger:content>
+				</json-logger:logger>
+			</otherwise>
+		</choice>
+	</sub-flow>
+</mule>
